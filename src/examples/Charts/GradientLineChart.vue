@@ -20,10 +20,11 @@
             <div
               v-for="item in containers.items.items"
               :key="item.id"
-              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color]"
+              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color, { 'selected': selectedItem && selectedItem.id === item.id }]"
               draggable="true"
               @dragstart="handleDragStart($event, item)"
               @touchstart="handleTouchStart(item)"
+              @click="selectItem(item)"
               style="cursor: move;"
             >
               <span>{{ item.content }}</span>
@@ -45,7 +46,7 @@
           @dragover.prevent
           @drop="handleDrop($event, key)"
           style="background-color: #2A3552;"
-
+          @click="moveSelectedItemToContainer(key)"
         >
           <h5 class="mb-3" style="color: white;">{{ container.title }}</h5>
           <div class="min-height-100" style="min-height: 150px;">
@@ -95,6 +96,7 @@ import axios from 'axios'
 
 const store = useStore()
 const emit = defineEmits(['activityCompleted']);
+const selectedItem = ref(null); // Definir el elemento seleccionado
 
 // Estado reactivo para los contenedores
 const containers = ref({
@@ -137,6 +139,36 @@ const interactionData = ref({
 })
 
 const userId = computed(() => store.state.userId)
+
+
+// Función para seleccionar un elemento
+function selectItem(item) {
+  selectedItem.value = selectedItem.value && selectedItem.value.id === item.id ? null : item;
+  console.log('selectedItem', selectedItem.value);
+}
+// Función para mover el elemento seleccionado al contenedor especificado
+function moveSelectedItemToContainer(containerKey) {
+  if (!selectedItem.value) return;
+
+  // Encontrar y eliminar el item del contenedor original
+  const sourceContainerKey = Object.keys(containers.value).find(key =>
+    containers.value[key].items.some(i => i.id === selectedItem.value.id)
+  );
+
+  if (sourceContainerKey) {
+    const sourceContainer = containers.value[sourceContainerKey].items;
+    const itemIndex = sourceContainer.findIndex(i => i.id === selectedItem.value.id);
+    if (itemIndex !== -1) {
+      sourceContainer.splice(itemIndex, 1);
+    }
+  }
+
+  // Mover el item al contenedor de destino
+  containers.value[containerKey].items.push(selectedItem.value);
+
+  // Limpiar la selección
+  selectedItem.value = null;
+}
 
 // Función para calcular el tiempo de interacción
 const calculateCompletionTime = () => {
@@ -314,7 +346,7 @@ const sendInteractionData = async () => {
   const userIdparams = userId.value
   console.log('interactionData antes de enviar', interactionData.value)
   try {
-    await axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, interactionData.value)
+    await axios.put(`http://24.199.103.0:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, interactionData.value)
     console.log('Datos enviados al backend:', interactionData.value)
     setTimeout(() => {
       fetchInteractionData()
@@ -327,7 +359,7 @@ const sendInteractionData = async () => {
 const fetchInteractionData = async () => {
   const userIdparams = userId.value
   try {
-    const response = await axios.get(`http://localhost:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
+    const response = await axios.get(`http://24.199.103.0:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
     console.log('response', response.data)
     interactionData.value = response.data.activities
     console.log('interactionData actualizado:', interactionData.value)

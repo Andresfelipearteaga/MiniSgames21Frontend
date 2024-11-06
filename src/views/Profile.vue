@@ -23,7 +23,7 @@ const fetchUserInfo = async () => {
       try {
         const userId = computed(() => store.getters.getUserId);
         console.log('userId', userId.value);
-        const response = await axios.get(`http://localhost:5000/api/users/profile/${userId.value}`, { withCredentials: true });
+        const response = await axios.get(`http://24.199.103.0:5000/api/users/profile/${userId.value}`,);
         console.log(response.data);
         dataUser.value = response.data.user;
         activitiesUser.value = response.data.activities;

@@ -36,7 +36,7 @@ const goToSignin = () => {
 // Función para registrar un usuario
 const registerUser = async () => {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/register", {
+    const response = await axios.post("http://24.199.103.0:5000/api/auth/register", {
       institution: institution.value,
       grade: grade.value,
       age: age.value,

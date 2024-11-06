@@ -35,11 +35,10 @@ const singup = () => {
 
 const login = async () => {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/login", {
+    const response = await axios.post("http://24.199.103.0:5000/api/auth/login", {
       name: name.value,
       password: password.value,
     },    
-    { withCredentials: true }
         );
       errorMessage.value = response.data.error
       console.log('errorMessage', errorMessage.value)
