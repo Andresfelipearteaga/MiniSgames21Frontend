@@ -188,7 +188,7 @@ export default {
       // Aquí enviarías statsPayload a tu base de datos con una llamada API
       console.log("Enviando datos a la base de datos:", activityInfo);
       const userIdparams = this.userId;
-      axios.put(`http://24.199.103.0:5000/api/activities/update/${userIdparams}/${this.activityNumber}`, activityInfo).then((response) => {
+      axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${this.activityNumber}`, activityInfo).then((response) => {
         console.log("Datos enviados:", response.data);
       });
     },
@@ -196,7 +196,7 @@ export default {
 
     async showActivityInfo() {
       try {
-        const response = await axios.get(`http://24.199.103.0:5000/api/activities/get/${this.userId}/${this.activityNumber}`);
+        const response = await axios.get(`http://localhost:5000/api/activities/get/${this.userId}/${this.activityNumber}`);
         this.currentActivity = response.data.activities;
         console.log(this.currentActivity);
         this.showActivityDetails = true; // Muestra el div con la información
@@ -231,7 +231,7 @@ export default {
 
     async verifyCompleted() {
       try {
-        const response = await axios.get(`http://24.199.103.0:5000/api/activities/get/${this.userId}/${this.activityNumber}`);
+        const response = await axios.get(`http://localhost:5000/api/activities/get/${this.userId}/${this.activityNumber}`);
         this.currentActivity = response.data.activities;
         console.log(this.currentActivity);
         if (this.currentActivity.completed === true) {

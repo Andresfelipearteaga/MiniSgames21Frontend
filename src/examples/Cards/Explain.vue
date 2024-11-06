@@ -127,7 +127,7 @@ const completeActivity = async () => {
   console.log('activityNumber', activityNumber.value)
   
   try {
-    await axios.put(`http://24.199.103.0:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, data)
+    await axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, data)
     activityCompleted.value = true;
     localStorage.setItem('activityCompleted', true);
 
@@ -145,7 +145,7 @@ onBeforeMount(async () => {
     const userIdparams = userId.value;
 
     // Solicitud a la base de datos para verificar el estado de la actividad
-    const response = await axios.get(`http://24.199.103.0:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
+    const response = await axios.get(`http://localhost:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
     const activityData = response.data;
     console.log('activityData', activityData);
     activityCompleted.value = response.data.activities.completed

@@ -18,7 +18,7 @@ const getRoute = () => {
 
 const logout = async () => {
   try {
-    const response = await axios.post("http://24.199.103.0:5000/api/auth/logout", {});
+    const response = await axios.post("http://localhost:5000/api/auth/logout", {} ,{ withCredentials: true });
     console.log(response);
     router.push("/signin");
     store.commit("setUserId", null);

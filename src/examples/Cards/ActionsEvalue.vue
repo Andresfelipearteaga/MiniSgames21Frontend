@@ -119,7 +119,7 @@ const checkActions = async () => {
       const userIdparams = userId.value;
       console.log('userIdparams', userIdparams);
       console.log('activityNumber', activityNumber.value);
-      await axios.put(`http://24.199.103.0:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, {
+      await axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, {
         actions: selectedActions.value,
         duration,
         progress: 100,
@@ -160,7 +160,7 @@ onBeforeMount(async () => {
   loadSelectedActions();
   const userIdparams = userId.value;
   try {
-    const response = await axios.get(`http://24.199.103.0:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
+    const response = await axios.get(`http://localhost:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
     completed.value = response.data.activities.completed;
   } catch (error) {
     console.error("Error al cargar el estado de la actividad:", error);
