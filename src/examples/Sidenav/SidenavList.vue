@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import axios from 'axios';
+// import axios from 'axios';
 import SidenavItem from "./SidenavItem.vue";
 // import SidenavCard from "./SidenavCard.vue";
 
@@ -16,17 +16,15 @@ const getRoute = () => {
   return routeArr[1];
 };
 
-const logout = async () => {
-  try {
-    const response = await axios.post("http://localhost:5000/api/auth/logout", {} ,{ withCredentials: true });
-    console.log(response);
+
+const logout = () => {
     router.push("/signin");
     store.commit("setUserId", null);
     localStorage.clear();
-  } catch (error) {
-    console.error("Error al cerrar sesión:", error);
-  }
+
 };
+
+
 </script>
 <template>
   <div

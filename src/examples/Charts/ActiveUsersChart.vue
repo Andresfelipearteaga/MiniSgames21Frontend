@@ -11,7 +11,7 @@ const fetchUserInfo = async () => {
       try {
         const userId = computed(() => store.getters.getUserId);
         console.log('userId', userId.value);
-        const response = await axios.get(`http://localhost:5000/api/users/profile/${userId.value}` , { withCredentials: true });
+        const response = await axios.get(`http://localhost:5000/api/users/profile/${userId.value}`);
         const activitiesProgress = response.data.activitiesProgress;
         console.log('activitiesUser', activitiesProgress);
         arrayNumbers.value = Object.values(activitiesProgress).filter(value => typeof value === "number");
