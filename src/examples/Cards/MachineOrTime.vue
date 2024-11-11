@@ -164,7 +164,7 @@ function submitQuiz() {
   interactionData.value.progress = 100;
   interactionData.value.completed = true;
   // Envío de datos al backend
-  axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, 
+  axios.put(`http://24.199.103.0/api/activities/update/${userIdparams}/${activityNumber.value}`, 
     interactionData.value,
   )  
   .then(response => console.log('Respuestas enviadas:', response.data), emit('activityCompleted'))
@@ -220,7 +220,7 @@ const getActivityData = async () => {
     const userIdparams = userId.value
     console.log('userIdparams', userIdparams)
     console.log('activityNumber', activityNumber.value)
-    const response = await axios.get(`http://localhost:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
+    const response = await axios.get(`http://24.199.103.0/api/activities/get/${userIdparams}/${activityNumber.value}`)
     console.log('Datos obtenidos del backend:', response.data)
     console.log('response', response.data)
     showIf.value = response.data.activities.completed

@@ -20,11 +20,12 @@
             <div
               v-for="item in containers.items.items"
               :key="item.id"
-              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color]"
+              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color, { 'border-white': selectedItem === item }]"
               draggable="true"
               @dragstart="handleDragStart($event, item)"
               @touchstart="handleTouchStart(item)"
               style="cursor: move;"
+              @click="selectItem(item)"
             >
               <span>{{ item.content }}</span>
               <i class="bi bi-arrows-move"></i>
@@ -45,17 +46,18 @@
           @dragover.prevent
           @drop="handleDrop($event, key)"
           style="background-color: #2A3552;"
-
+          @click="moveSelectedItem(key)"
         >
           <h5 class="mb-3" style="color: white;">{{ container.title }}</h5>
           <div class="min-height-100" style="min-height: 150px;">
             <div
               v-for="item in container.items"
               :key="item.id"
-              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color, { 'border-red': item.isIncorrect }]"
+              :class="['mb-2 p-3 rounded d-flex align-items-center justify-content-between text-white', item.color, { 'border-red': item.isIncorrect }, { 'border-white': selectedItem === item }]"
               draggable="true"
               @dragstart="handleDragStart($event, item)"
               style="cursor: move;"
+              @click.stop="selectItem(item)"
             >
               <span>{{ item.content }}</span>
               <i class="bi bi-arrows-move"></i>
@@ -125,6 +127,38 @@ const containers = ref({
 
 const activityNumber = ref(2)
 const countResult = ref(null)
+const selectedItem = ref(null)
+
+
+// Función para seleccionar un item
+const selectItem = (item) => {
+  selectedItem.value = item
+}
+
+// Función para mover el item seleccionado al contenedor deseado
+const moveSelectedItem = (targetContainer) => {
+  if (!selectedItem.value) return
+
+  // Encontrar y remover el item del contenedor actual
+  const removeFromContainer = (containerItems) => {
+    const index = containerItems.findIndex(item => item.id === selectedItem.value.id)
+    if (index !== -1) {
+      containerItems.splice(index, 1)
+    }
+  }
+
+  // Remover del contenedor original
+  removeFromContainer(containers.value.items.items)
+  removeFromContainer(containers.value.causas.items)
+  removeFromContainer(containers.value.efectos.items)
+
+  // Agregar al contenedor objetivo
+  containers.value[targetContainer].items.push(selectedItem.value)
+
+  // Limpiar la selección
+  selectedItem.value = null
+}
+
 
 const interactionData = ref({
   title: 'Drag and Drop to Climate', 
@@ -314,7 +348,7 @@ const sendInteractionData = async () => {
   const userIdparams = userId.value
   console.log('interactionData antes de enviar', interactionData.value)
   try {
-    await axios.put(`http://localhost:5000/api/activities/update/${userIdparams}/${activityNumber.value}`, interactionData.value)
+    await axios.put(`http://24.199.103.0/api/activities/update/${userIdparams}/${activityNumber.value}`, interactionData.value)
     console.log('Datos enviados al backend:', interactionData.value)
     setTimeout(() => {
       fetchInteractionData()
@@ -327,7 +361,7 @@ const sendInteractionData = async () => {
 const fetchInteractionData = async () => {
   const userIdparams = userId.value
   try {
-    const response = await axios.get(`http://localhost:5000/api/activities/get/${userIdparams}/${activityNumber.value}`)
+    const response = await axios.get(`http://24.199.103.0/api/activities/get/${userIdparams}/${activityNumber.value}`)
     console.log('response', response.data)
     interactionData.value = response.data.activities
     console.log('interactionData actualizado:', interactionData.value)
@@ -355,6 +389,10 @@ watch(containers, saveToLocalStorage, { deep: true })
 
 .border-red {
   border: 6px solid red;
+}
+
+.border-white {
+  border: 6px solid rgb(255, 255, 255);
 }
 
 @media (max-width: 768px) {

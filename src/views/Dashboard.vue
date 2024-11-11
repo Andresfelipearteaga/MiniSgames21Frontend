@@ -51,7 +51,7 @@ const fetchUserActivities = async () => {
   const userIdparams = userId.value;
   console.log('userIdparams', userIdparams);
   try {
-    const response = await axios.get(`http://localhost:5000/api/activities/getAll/${userIdparams}/`);
+    const response = await axios.get(`http://24.199.103.0/api/activities/getAll/${userIdparams}/`);
 
     // Transforma el objeto en un arreglo de actividades con `id` y `completed`
     activities.value = Object.entries(response.data.activities).map(([key, completed]) => ({

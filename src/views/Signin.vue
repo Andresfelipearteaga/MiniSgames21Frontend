@@ -40,26 +40,37 @@ const login = async () => {
       password: password.value,
     }, 
         );
-      errorMessage.value = response.data.error
+      errorMessage.value = response.data.message
       console.log('errorMessage', errorMessage.value)
 
     setTimeout(() => {
         errorMessage.value = ''
       }, 5000);
 
-    if (response.status === 200) {
+    if (response.status === 201) {
+      console.log(response.status)
       store.commit("setUserId", response.data.userId);
       const userFromVuex = store.getters.getUserId;
       console.log('userFromVuex', userFromVuex);
       localStorage.setItem('showHistory', 'false');
       router.push("/content");
-    } else {
-      errorMessage.value = response.data.error
+    } else if (response.status === 400) {
+      errorMessage.value = response.data.message
       console.log('errorMessage', errorMessage.value)
     } 
 } 
   catch (error) {
-    console.log("error", error)
+    console.log("error", error, error.response)
+    if (error.response) { // Asegurarse de que el error tenga una respuesta
+      errorMessage.value = error.response.data.message;
+      console.log('errorMessage', errorMessage.value);
+      
+      setTimeout(() => {
+        errorMessage.value = '';
+      }, 5000);
+    } else {
+      console.log("Error inesperado", error);
+    }
   }
 };
 
