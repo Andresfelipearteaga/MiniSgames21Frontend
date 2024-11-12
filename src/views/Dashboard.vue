@@ -234,7 +234,7 @@ onBeforeMount (() => {
           <div class="col-lg-3 col-md-6 col-12" @click="selectActivity('activity4')">
             <mini-statistics-card style="cursor: pointer;"
               title="Actividad 4"
-              value="Oberva"
+              value="Observa"
         
               :icon="{
                 component: lockedActivities.includes('activity4') ? 'ni ni-fat-remove' : 'ni ni-bullet-list-67',
